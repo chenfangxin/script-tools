@@ -1,0 +1,15 @@
+# compile libvirt-1.2.21
+	./autogen.sh --system
+
+# compile dpdk-2.1.0
+	make config T=x86_64-native-linuxapp-gcc
+	make install T=x86_64-native-linuxapp-gcc
+	cd lib/librte_vhost/eventfd_link
+	make
+
+# compile ovs-2.4.0
+	./configure --localstatedir=/var --with-dpdk=$DPDK_DIR/x86_64-native-linuxapp-gcc
+
+# compile qemu-2.4.0
+	./configure --prefix=/usr --target-list=x86_64-softmmu
+

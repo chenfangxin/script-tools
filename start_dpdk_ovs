@@ -31,18 +31,19 @@ $DPDK_DIR/tools/dpdk_nic_bind.py --bind=igb_uio eth4
 $DPDK_DIR/tools/dpdk_nic_bind.py --bind=igb_uio eth5
 
 mkdir -p /var/run/openvswitch
+rm -rf /usr/local/etc/openvswitch/confi.db
 
 ## Just init once 
-# /usr/local/bin/ovsdb-tool create /usr/local/etc/openvswitch/conf.db /usr/local/share/openvswitch/vswitch.ovsschema
+/usr/local/bin/ovsdb-tool create /usr/local/etc/openvswitch/conf.db /usr/local/share/openvswitch/vswitch.ovsschema
 
 /usr/local/sbin/ovsdb-server --remote=punix:/var/run/openvswitch/db.sock \
 		--remote=db:Open_vSwitch,Open_vSwitch,manager_options \
 		--log-file --pidfile --detach
 
 ## Just init once 
-# /usr/local/bin/ovs-vsctl --no-wait init
+/usr/local/bin/ovs-vsctl --no-wait init
 
-/usr/local/sbin/ovs-vswitchd --dpdk -c 0xe -n 4 -- unix:/var/run/openvswitch/db.sock \
+/usr/local/sbin/ovs-vswitchd --dpdk -c 0xe -n 4 --socket-mem 2048 -- unix:/var/run/openvswitch/db.sock \
 		--log-file --pidfile --detach
 
 ##############################################################################
