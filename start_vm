@@ -2,8 +2,11 @@
 qemu-kvm -m 2048 \
 	-smp 2 \
 	-chardev socket,id=char0,path=/var/run/openvswitch/vhost-user-0 \
-	-netdev type=vhost-user,id=mynet1,chardev=char0,vhostforce \
-	-device virtio-net-pci,netdev=mynet1,mac=52:54:00:82:a0:72 \
+	-netdev type=vhost-user,id=mynet0,chardev=char0,vhostforce \
+	-device virtio-net-pci,netdev=mynet0,mac=52:54:00:82:a0:72 \
+	-chardev socket,id=char1,path=/var/run/openvswitch/vhost-user-1 \
+	-netdev type=vhost-user,id=mynet1,chardev=char1,vhostforce \
+	-device virtio-net-pci,netdev=mynet1,mac=52:54:00:82:a0:73 \
 	-object memory-backend-file,id=mem,size=2048M,mem-path=/dev/hugepages,share=on \
 	-numa node,memdev=mem -mem-prealloc \
 	-vnc 127.0.0.1:0 \

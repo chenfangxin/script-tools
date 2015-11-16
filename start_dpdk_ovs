@@ -18,13 +18,16 @@ DPDK_DIR=/root/workplane/dpdk
 DPDK_BUILD=/root/workplane/dpdk/x86_64-native-linuxapp-gcc
 export DPDK_DIR DPDK_BUILD
 
+## set hugepage number, use boot cmdline or procfs 
 echo 2048 > /proc/sys/vm/nr_hugepages
 
+## insert the kernel modules
 modprobe uio
 insmod $DPDK_BUILD/kmod/igb_uio.ko
 insmod $DPDK_BUILD/kmod/rte_kni.ko
 insmod $DPDK_DIR/lib/librte_vhost/eventfd_link/eventfd_link.ko
 
+# unbind the dpdk interface
 $DPDK_DIR/tools/dpdk_nic_bind.py --bind=igb_uio eth1
 $DPDK_DIR/tools/dpdk_nic_bind.py --bind=igb_uio eth3
 $DPDK_DIR/tools/dpdk_nic_bind.py --bind=igb_uio eth4
@@ -48,16 +51,15 @@ rm -rf /usr/local/etc/openvswitch/confi.db
 
 ##############################################################################
 ## Add brige 
-# /usr/local/bin/ovs-vsctl add-br ovsbr0 -- set bridge ovsbr0 datapath_type=netdev
+/usr/local/bin/ovs-vsctl add-br ovsbr0 -- set bridge ovsbr0 datapath_type=netdev
 
 ## Add dpdk port
-# /usr/local/bin/ovs-vsctl add-port ovsbr0 dpdk0 -- set Interface dpdk0 type=dpdk
-# /usr/local/bin/ovs-vsctl add-port ovsbr0 dpdk1 -- set Interface dpdk1 type=dpdk
+/usr/local/bin/ovs-vsctl add-port ovsbr0 dpdk0 -- set Interface dpdk0 type=dpdk
+/usr/local/bin/ovs-vsctl add-port ovsbr0 dpdk1 -- set Interface dpdk1 type=dpdk
 # /usr/local/bin/ovs-vsctl add-port ovsbr0 dpdk2 -- set Interface dpdk2 type=dpdk
 # /usr/local/bin/ovs-vsctl add-port ovsbr0 dpdk3 -- set Interface dpdk3 type=dpdk
 
 ## Add vhost-user port 
-# /usr/local/bin/ovs-vsctl add-port ovsbr0 vhost-user-0 -- set Interface vhost-user-0 type=dpdkvhostuser
-# /usr/local/bin/ovs-vsctl add-port ovsbr0 vhost-user-0 -- set Interface vhost-user-0 type=dpdkvhostuser
-# /usr/local/bin/ovs-vsctl add-port ovsbr0 vhost-user-0 -- set Interface vhost-user-0 type=dpdkvhostuser
+/usr/local/bin/ovs-vsctl add-port ovsbr0 vhost-user-0 -- set Interface vhost-user-0 type=dpdkvhostuser
+/usr/local/bin/ovs-vsctl add-port ovsbr0 vhost-user-1 -- set Interface vhost-user-1 type=dpdkvhostuser
 ###############################################################################
