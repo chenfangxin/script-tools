@@ -1,0 +1,17 @@
+#!/bin/bash
+
+modprobe openvswitch
+
+mkdir -p /var/run/openvswitch
+rm -rf /usr/etc/openvswitch/confi.db
+
+/usr/bin/ovsdb-tool create /usr/etc/openvswitch/conf.db /usr/share/openvswitch/vswitch.ovsschema
+
+/usr/sbin/ovsdb-server --remote=punix:/var/run/openvswitch/db.sock \
+		--remote=db:Open_vSwitch,Open_vSwitch,manager_options \
+		--log-file --pidfile --detach
+
+/usr/bin/ovs-vsctl --no-wait init
+
+/usr/sbin/ovs-vswitchd unix:/var/run/openvswitch/db.sock \
+		--log-file --pidfile --detach
