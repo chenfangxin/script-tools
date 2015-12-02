@@ -10,4 +10,4 @@ qemu-kvm -m 2048 \
 	-object memory-backend-file,id=mem,size=2048M,mem-path=/dev/hugepages,share=on \
 	-numa node,memdev=mem -mem-prealloc \
 	-vnc 127.0.0.1:0 \
-	-hda /var/lib/libvirt/images/ubuntu-1.qcow2
+	-hda /var/lib/libvirt/images/centos7.0.qcow2

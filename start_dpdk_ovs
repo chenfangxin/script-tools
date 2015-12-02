@@ -14,8 +14,8 @@
 # make install
 ########################################################
 
-DPDK_DIR=/root/workplane/dpdk
-DPDK_BUILD=/root/workplane/dpdk/x86_64-native-linuxapp-gcc
+DPDK_DIR=/root/workplane/dpdk-2.1.0
+DPDK_BUILD=/root/workplane/dpdk-2.1.0/x86_64-native-linuxapp-gcc
 export DPDK_DIR DPDK_BUILD
 
 ## set hugepage number, use boot cmdline or procfs 
@@ -29,9 +29,10 @@ insmod $DPDK_DIR/lib/librte_vhost/eventfd_link/eventfd_link.ko
 
 # unbind the dpdk interface
 $DPDK_DIR/tools/dpdk_nic_bind.py --bind=igb_uio eth1
-$DPDK_DIR/tools/dpdk_nic_bind.py --bind=igb_uio eth3
-$DPDK_DIR/tools/dpdk_nic_bind.py --bind=igb_uio eth4
-$DPDK_DIR/tools/dpdk_nic_bind.py --bind=igb_uio eth5
+$DPDK_DIR/tools/dpdk_nic_bind.py --bind=igb_uio eth2
+# $DPDK_DIR/tools/dpdk_nic_bind.py --bind=igb_uio eth3
+# $DPDK_DIR/tools/dpdk_nic_bind.py --bind=igb_uio eth4
+# $DPDK_DIR/tools/dpdk_nic_bind.py --bind=igb_uio eth5
 
 mkdir -p /var/run/openvswitch
 rm -rf /usr/local/etc/openvswitch/confi.db
