@@ -3,7 +3,7 @@
 modprobe openvswitch
 
 mkdir -p /var/run/openvswitch
-rm -rf /usr/etc/openvswitch/confi.db
+rm -rf /usr/etc/openvswitch/conf.db
 
 /usr/bin/ovsdb-tool create /usr/etc/openvswitch/conf.db /usr/share/openvswitch/vswitch.ovsschema
 
@@ -15,3 +15,9 @@ rm -rf /usr/etc/openvswitch/confi.db
 
 /usr/sbin/ovs-vswitchd unix:/var/run/openvswitch/db.sock \
 		--log-file --pidfile --detach
+
+ovs-vsctl add-br ovsbr0
+
+ovs-vsctl add-port ovsbr0 eth1
+ovs-vsctl add-port ovsbr0 eth2
+
