@@ -1,0 +1,18 @@
+#!/bin/bash
+RTE_SDK=/root/workplane/dpdk-2.1.0
+
+export RTE_SDK
+
+echo 2048 > /proc/sys/vm/nr_hugepages
+
+modprobe uio
+
+insmod $RTE_SDK/x86_64-native-linuxapp-gcc/kmod/igb_uio.ko
+insmod $RTE_SDK/x86_64-native-linuxapp-gcc/kmod/rte_kni.ko
+
+$RTE_SDK/tools/dpdk_nic_bind.py --bind=igb_uio eth1
+$RTE_SDK/tools/dpdk_nic_bind.py --bind=igb_uio eth2
+
+cp lagopus/misc/examples/lagopus.dsl /usr/local/etc/lagopus/
+
+lagopus -d -- -ce -n4 -- -p3
