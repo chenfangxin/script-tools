@@ -1,0 +1,9 @@
+#!/bin/bash
+mkdir -p /sys/fs/cgroup/memory/test
+echo 20480 > /sys/fs/cgroup/memory/test/memory.limit_in_bytes
+echo $$ > /sys/fs/cgroup/memory/test/tasks
+
+x="a"
+while [ True ];do
+    x=$x$x
+done;
