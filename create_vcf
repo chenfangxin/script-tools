@@ -1,0 +1,26 @@
+#!/bin/bash
+MOUNT_POINT=`pwd`
+qemu-img create -f raw newboot.vcf 960M
+
+fdisk newboot.vcf<<EOF
+n
+p
+
+
+
+a
+w
+EOF
+
+kpartx -av newboot.vcf
+losetup -f --show /dev/mapper/loop0p1
+mkfs.ext4 -F /dev/mapper/loop0p1
+mount /dev/loop1 $MOUNT_POINT/vcf/
+grub-install --no-floppy --grub-mkdevicemap=device.map \
+    --modules="biosdisk part_msdos ext2 configfile normal multiboot" \
+    --root-directory=$MOUNT_POINT/vcf /dev/loop0
+cp grub.cfg $MOUNT_POINT/vcf/boot/
+
+umount $MOUNT_POINT/vcf
+losetup -d /dev/loop1
+kpartx -d newboot.vcf
