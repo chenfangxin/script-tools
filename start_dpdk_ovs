@@ -35,7 +35,7 @@ $DPDK_DIR/tools/dpdk_nic_bind.py --bind=igb_uio eth2
 # $DPDK_DIR/tools/dpdk_nic_bind.py --bind=igb_uio eth5
 
 mkdir -p /var/run/openvswitch
-rm -rf /usr/local/etc/openvswitch/confi.db
+rm -rf /usr/local/etc/openvswitch/conf.db
 
 ## Just init once 
 /usr/local/bin/ovsdb-tool create /usr/local/etc/openvswitch/conf.db /usr/local/share/openvswitch/vswitch.ovsschema
