@@ -35,18 +35,20 @@ $DPDK_DIR/tools/dpdk_nic_bind.py --bind=igb_uio eth2
 # $DPDK_DIR/tools/dpdk_nic_bind.py --bind=igb_uio eth5
 
 mkdir -p /var/run/openvswitch
-rm -rf /usr/local/etc/openvswitch/conf.db
 
-## Just init once 
+## Just need run one time, to create db file
+rm -rf /usr/local/etc/openvswitch/conf.db
 /usr/local/bin/ovsdb-tool create /usr/local/etc/openvswitch/conf.db /usr/local/share/openvswitch/vswitch.ovsschema
 
+## Start ovsdb daemon
 /usr/local/sbin/ovsdb-server --remote=punix:/var/run/openvswitch/db.sock \
 		--remote=db:Open_vSwitch,Open_vSwitch,manager_options \
 		--log-file --pidfile --detach
 
-## Just init once 
+## Just need run one time
 /usr/local/bin/ovs-vsctl --no-wait init
 
+#Start ovs daemon
 /usr/local/sbin/ovs-vswitchd --dpdk -c 0xe -n 4 --socket-mem 2048 -- unix:/var/run/openvswitch/db.sock \
 		--log-file --pidfile --detach
 
@@ -57,8 +59,6 @@ rm -rf /usr/local/etc/openvswitch/conf.db
 ## Add dpdk port
 /usr/local/bin/ovs-vsctl add-port ovsbr0 dpdk0 -- set Interface dpdk0 type=dpdk
 /usr/local/bin/ovs-vsctl add-port ovsbr0 dpdk1 -- set Interface dpdk1 type=dpdk
-# /usr/local/bin/ovs-vsctl add-port ovsbr0 dpdk2 -- set Interface dpdk2 type=dpdk
-# /usr/local/bin/ovs-vsctl add-port ovsbr0 dpdk3 -- set Interface dpdk3 type=dpdk
 
 ## Add vhost-user port 
 /usr/local/bin/ovs-vsctl add-port ovsbr0 vhost-user-0 -- set Interface vhost-user-0 type=dpdkvhostuser
