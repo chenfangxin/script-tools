@@ -1,61 +1,61 @@
-1. ×¼±¸LVM¾í
-ÓÃÈçÏÂÃüÁî£º
+1. å‡†å¤‡LVMå·
+ç”¨å¦‚ä¸‹å‘½ä»¤ï¼š
 ```
-  apt-get install lvm2
-  pvcreate /dev/sda4  # ÔÚ·ÖÇøÉÏ½¨Á¢PV
-  vgcreate vg0 /dev/sda4 # ´´½¨ÃûÎªvg0µÄ¾í×é
-  lvcreate -n centos7 -L 20G vg0 # ´´½¨ÃûÎªcentos7µÄ¾í
+    apt-get install lvm2
+    pvcreate /dev/sda4      # åœ¨åˆ†åŒºä¸Šå»ºç«‹PV
+    vgcreate vg0 /dev/sda4  # åˆ›å»ºåä¸ºvg0çš„å·ç»„
+    lvcreate -n centos7 -L 20G vg0  # åˆ›å»ºåä¸ºcentos7çš„å·
 ```
 
-2. °²×°Xen
-ÓÃÈçÏÂÃüÁî£º
+2. å®‰è£…XEN
+ç”¨å¦‚ä¸‹å‘½ä»¤ï¼š
 ```
-  apt-get install xen-linux-system
+    apt-get install xen-linux-system
 ```
-3. ×¼±¸ÍøÂç
-±¾ÀıÖĞ£¬Ê¹ÓÃLinux BridgeÁ¬½ÓĞéÄâ»úºÍÎïÀí½Ó¿Ú
-ÓÃÈçÏÂÃüÁî°²×°¹¤¾ß£º
+
+3. å‡†å¤‡ç½‘ç»œ
+æœ¬ä¾‹ä¸­ï¼Œä½¿ç”¨Linux Bridgeè¿æ¥è™šæ‹Ÿæœºå’Œç‰©ç†æ¥å£
+ç”¨å¦‚ä¸‹å‘½ä»¤å®‰è£…Bridgeå·¥å…·ï¼š
 ```
-  apt-get install bridge-utils
+    apt-get install bridge-utils
 ```
-ÔÚ```/etc/network/interfaces```ÎÄ¼şÖĞ£¬ÉèÖÃÏµÍ³ÍøÂç£º
+åœ¨```/etc/network/interfaces```æ–‡ä»¶ä¸­ï¼Œè®¾ç½®ç³»ç»Ÿç½‘ç»œï¼š
 ```
 auto eth0
 iface eth0 inet manual
 
 auto xenbr0
 iface xenbr0 inet static
-  bridge_ports eth0
-  address 192.168.1.148
-  netmask 255.255.255.0
-  gateway 192.168.1.1	
+    bridge_ports eth0
+    address 192.168.1.148
+    netmask 255.255.255.0
+    gateway 192.168.1.1
 ```
 
-4. ´´½¨ĞéÄâ»úµÄÅäÖÃÎÄ¼ş
-  ĞéÄâ»úµÄÅäÖÃÎÄ¼ş£¬ÃûÎªcentos7.cfg£¬ÄÚÈİÈçÏÂ£º
+4. åˆ›å»ºè™šæ‹Ÿæœºçš„é…ç½®æ–‡ä»¶
+è™šæ‹Ÿæœºçš„é…ç½®æ–‡ä»¶ï¼Œåä¸ºcentos7.cfgï¼Œå†…å®¹å¦‚ä¸‹ï¼š
 ```
-kernel = "/usr/lib/xen-4.4/boot/hvmloader"
-builder = 'hvm'
-memory = 4096
-vcpus = 4
-name = "centos7"
-vif = ['type=vif,bridge=xenbr0']
-disk = ['phy:/dev/vg0/centos7,hda,w','file:/root/Downloads/centos7.iso,hdc:cdrom,r']
-acpi = 1
+kernel  = "/usr/lib/xen-4.4/boot/hvmloader"
+builder = "hvm"
+memory  = 4096
+vcpus   = 4
+name    = "centos7"
+vif     = ['type=vif,bridge=xenbr0']
+disk    = ['phy:/dev/vg0/centos7,hda,w','file:/root/Downloads/centos7.iso,hdc:cdrom,r']
+acpi    = 1
 device_model_version = 'qemu-xen'
-boot = "d"
-sdl = 0
-vnc = 1
-serial = 'pty'
-vnc = 1
-vncdisplay = 1
-vnclisten = ""
-vncpasswd = ""
+boot    = "d"
+sdl     = 0
+serial  = 'pty'
+vnc     = 1
+vncdisplay  = 1
+vnclisten   = ""
+vncpasswd   = ""
 ```
 
-5. ´´½¨ĞéÄâ»ú
-ÓÃÈçÏÂÃüÁî£º
+5. åˆ›å»ºè™šæ‹Ÿæœº
+ç”¨å¦‚ä¸‹å‘½ä»¤ï¼š
 ```
-  xl create centos7.cfg
-  xvnc4viewer 192.168.1.148:5901   # portÓÉ vncdisplay ¾ö¶¨
+    xl create centos7.cfg
+    xvnc4viewer 192.168.1.148:5901  # portç”±vncdisplayå†³å®š
 ```
