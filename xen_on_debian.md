@@ -54,6 +54,7 @@ vncdisplay  = 1
 vnclisten   = ""
 vncpasswd   = ""
 ```
+虚拟机使用的硬盘镜像，可以是raw格式的(用dd创建)，也可以是qcow2格式的(用qemu-img创建)，还可以是LVM的一个卷,这三者在disk域中区分。
 
 # 创建虚拟机
 用如下命令：
