@@ -41,12 +41,11 @@ memory  = 4096
 vcpus   = 4
 name    = "centos7"
 vif     = ['type=vif,bridge=xenbr0']
-# disk    = ['tap:aio:/home/ratel/centos7.raw,sda1,w']
-# disk    = ['tap:qcow2:/home/ratel/centos7.img,hda,w']
+# disk    = ['/home/ratel/centos7.img,qcow2,xvda,rw']
 disk    = ['phy:/dev/vg0/centos7,hda,w','file:/root/Downloads/centos7.iso,hdc:cdrom,r']
 acpi    = 1
 device_model_version = 'qemu-xen'
-boot    = "d"
+boot    = "a"
 sdl     = 0
 serial  = 'pty'
 vnc     = 1
