@@ -44,7 +44,7 @@ def create_vmconfig(idx):
 
 def create_vm_img(vmname):
     os.system("cp templete-new.vcf %s/%s.vcf" % (vmname, vmname))
-    vcf_img = "/mnt1/virutal_machine/" + vmname + "/" + vmname + ".vcf"
+    vcf_img = "/mnt1/virtual_machine/" + vmname + "/" + vmname + ".vcf"
 
     devname = subprocess.Popen(["kpartx", "-avs", vcf_img], stdout=subprocess.PIPE).communicate()[0].split()[2]
     print devname
@@ -59,7 +59,7 @@ def create_vm_img(vmname):
     os.system("sync");
 
     os.system("umount %s/vcf" % vmname)
-    os.system("kpartx -d /mnt1/virutal_machine/%s/%s.vcf" % (vmname, vmname))
+    os.system("kpartx -d /mnt1/virtual_machine/%s/%s.vcf" % (vmname, vmname))
 
 if __name__ == "__main__":
     for idx in range(1, 3):
