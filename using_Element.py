@@ -94,6 +94,7 @@ def create_xml(cfg):
 
 	child = Element('vcpu')
 	child.text = str(len(cfg['cpuset']))
+	elem.append(child)
 
 	child = presist_cpuset(cfg['cpuset'])
 	elem.append(child)
@@ -159,7 +160,7 @@ def create_xml(cfg):
 	subchild.set('type', 'file')
 	subchild.set('device', 'disk')
 	sub_subchild = Element('driver')
-	sub_subchild.set('name', 'qmeu')
+	sub_subchild.set('name', 'qemu')
 	sub_subchild.set('type', 'raw')
 	sub_subchild.set('cache', 'none')
 	subchild.append(sub_subchild)
