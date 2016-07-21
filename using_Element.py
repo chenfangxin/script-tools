@@ -195,14 +195,36 @@ def create_xml(cfg):
 
 	return elem
 
+def indent(elem, level=0):
+	i = '\n' + level * '  '
+
+	if len(elem):
+		if not elem.text or not elem.text.strip():
+			elem.text = i + '  '
+		if not elem.tail or not elem.tail.strip():
+			elem.tail = i
+		for subelem in elem:
+			indent(subelem, level+1)
+		if not elem.tail or not elem.tail.strip():
+			elem.tail = i
+	else:
+		if level and (not elem.tail or not elem.tail.strip()):
+			elem.tail = i
+
 if __name__=='__main__':
 	vmconfig = './vmconfig.json'
 	cfg = {}
 
-	with open(vmconfig) as f:
+	with open(vmconfig, 'rt') as f:
 		cfg = json.load(f)	
 
 	if cfg:
 		e = create_xml(cfg)
+		indent(e)
+	else:
+		print "Failt to load vmconfig.json file"
+		sys.exit(0)
 
-	print tostring(e)
+	xmlfile = './' + cfg['vmname'] + '.xml'
+	with open(xmlfile, 'wt') as f:
+		f.write(tostring(e))
