@@ -1,0 +1,48 @@
+#--------------------dpdk-16.11 + ovs-2.7.0 ------------------------------------
+# compile dpdk-16.11
+	make config T=x86_64-native-linuxapp-gcc
+	make
+	make install T=x86_64-native-linuxapp-gcc
+
+# compile ovs-2.7.0
+	./configure --prefix=/usr/local --localstatedir=/var --with-dpdk=$DPDK_DIR/x86_64-native-linuxapp-gcc
+	make && make install
+
+# setup dpdk environment
+echo N > /proc/sys/vm/nr_hugepags
+
+modprobe uio
+insmod igb_uio
+$DPDK_DIR/tools/dpdk-devbind.py -b igb_uio eth1
+$DPDK_DIR/tools/dpdk-devbind.py -b igb_uio eth2
+
+# start ovs-2.7.0
+
+mkdir -p /usr/local/var/run/openvswitch
+export DB_SOCK=/usr/local/var/run/openvswitch/db.sock
+
+
+## Just need run one time, to create db file
+rm -rf /usr/local/etc/openvswitch/conf.db
+/usr/local/bin/ovsdb-tool create /usr/local/etc/openvswitch/conf.db /usr/local/share/openvswitch/vswitch.ovsschema
+
+## Start ovsdb daemon
+/usr/local/sbin/ovsdb-server --remote=punix:/var/run/openvswitch/db.sock \
+		--remote=db:Open_vSwitch,Open_vSwitch,manager_options \
+		--pidfile --detach
+
+/usr/local/bin/ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-init=true
+
+/usr/local/sbin/ovs-vswitched unix:$DB_SOCK --pidfile --detach
+
+/usr/local/bin/ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-socket-mem="1024"
+/usr/local/bin/ovs-vsctl --no-wait set Open_vSwitch . other_config:pmd-cpu-mask=0x6
+
+# add bridge
+/usr/local/bin/ovs-vsctl add-br ovsbr0 -- set bridge ovsbr0 datapath_type=netdev
+
+# add dpdk port
+/usr/local/bin/ovs-vsctl add-port ovsbr0 dpdk0 -- set Interface dpdk0 type=dpdk options:dpdk-devargs=0000:06:00.0
+/usr/local/bin/ovs-vsctl add-port ovsbr0 dpdk1 -- set Interface dpdk1 type=dpdk options:dpdk-devargs=0000:06:00.1
+
+
