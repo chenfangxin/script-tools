@@ -45,4 +45,12 @@ rm -rf /usr/local/etc/openvswitch/conf.db
 /usr/local/bin/ovs-vsctl add-port ovsbr0 dpdk0 -- set Interface dpdk0 type=dpdk options:dpdk-devargs=0000:06:00.0
 /usr/local/bin/ovs-vsctl add-port ovsbr0 dpdk1 -- set Interface dpdk1 type=dpdk options:dpdk-devargs=0000:06:00.1
 
+/usr/local/bin/ovs-vsctl add-port ovsbr0 dpdkvhostuser0 -- set Interface dpdkvhostuser0 type=dpdkvhostuser
+/usr/local/bin/ovs-vsctl add-port ovsbr0 dpdkvhostuser1 -- set Interface dpdkvhostuser1 type=dpdkvhostuser
 
+# VM xml
+ <interface type='vhostuser'>
+	<source type='unix' path='/var/run/openvswitch/dpdkvhostuser0' mode='client'/>
+	<model type='virtio'/>
+</interface>
+ 
