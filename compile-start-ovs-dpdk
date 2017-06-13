@@ -48,6 +48,10 @@ rm -rf /usr/local/etc/openvswitch/conf.db
 /usr/local/bin/ovs-vsctl add-port ovsbr0 dpdkvhostuser0 -- set Interface dpdkvhostuser0 type=dpdkvhostuser
 /usr/local/bin/ovs-vsctl add-port ovsbr0 dpdkvhostuser1 -- set Interface dpdkvhostuser1 type=dpdkvhostuser
 
+# modify /etc/libvirt/qemu.conf
+user = 'root'
+group = 'root'
+
 # VM xml
  <interface type='vhostuser'>
 	<source type='unix' path='/var/run/openvswitch/dpdkvhostuser0' mode='client'/>
