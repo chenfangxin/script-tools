@@ -9,7 +9,7 @@
 	make && make install
 
 # setup dpdk environment
-echo N > /proc/sys/vm/nr_hugepags
+echo 1024 > /proc/sys/vm/nr_hugepages
 
 modprobe uio
 insmod igb_uio
@@ -33,7 +33,7 @@ rm -rf /usr/local/etc/openvswitch/conf.db
 
 /usr/local/bin/ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-init=true
 
-/usr/local/sbin/ovs-vswitched unix:$DB_SOCK --pidfile --detach
+/usr/local/sbin/ovs-vswitchd unix:$DB_SOCK --pidfile --detach
 
 /usr/local/bin/ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-socket-mem="1024"
 /usr/local/bin/ovs-vsctl --no-wait set Open_vSwitch . other_config:pmd-cpu-mask=0x6
