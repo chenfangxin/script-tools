@@ -1,0 +1,28 @@
+#!/bin/sh
+
+/usr/bin/qemu-system-x86_64 \
+	-machine accel=kvm \
+	-name guest=T1_TSOS \
+	-machine pc-i440fx-rhel7.3.0,accel=kvm,usb=off,vmport=off \
+	-m 4096 \
+	-realtime mlock=off \
+	-smp 2,sockets=2,cores=1,threads=1 \
+	-no-user-config \
+	-rtc base=utc \
+	-nodefaults \
+	-no-shutdown \
+	-no-acpi \
+	-boot strict=on \
+	-device piix3-usb-uhci,id=usb,bus=pci.0,addr=0x1.0x2 \
+	-drive file=/var/lib/libvirt/images/T1_TSOS.qcow2,format=raw,if=none,id=drive-ide0-0-1 \
+	-device ide-hd,bus=ide.0,unit=1,drive=drive-ide0-0-1,id=ide0-0-1,bootindex=1 \
+	-netdev tap,id=hostnet0,vhost=on,script=no,downscript=no \
+	-device virtio-net-pci,netdev=hostnet0,id=net0,mac=52:54:00:53:0d:a2,bus=pci.0,addr=0x3 \
+	-netdev tap,id=hostnet1,vhost=on,script=no,downscript=no \
+	-device virtio-net-pci,netdev=hostnet1,id=net1,mac=52:54:00:b1:2d:ef,bus=pci.0,addr=0x4 \
+	-chardev pty,id=charserial0 \
+	-device isa-serial,chardev=charserial0,id=serial0 \
+	-vnc 127.0.0.1:0 \
+	-device cirrus-vga,id=video0,bus=pci.0,addr=0x2 \
+	-device virtio-balloon-pci,id=balloon0,bus=pci.0,addr=0x7 \
+	-msg timestamp=on
